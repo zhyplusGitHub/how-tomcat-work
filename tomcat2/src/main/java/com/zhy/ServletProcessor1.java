@@ -11,7 +11,7 @@ import java.net.URLClassLoader;
 import java.net.URLStreamHandler;
 
 public class ServletProcessor1 {
-    public void process(Request request,Response response){
+    public void process(RequestFacade request,ResponseFacade response){
         String uri = request.getUri();
         String servletName = "com.zhy." + uri.substring(uri.lastIndexOf("/") +1);
         URLClassLoader loader = null;
@@ -35,7 +35,7 @@ public class ServletProcessor1 {
 
         try {
             Servlet primitiveServlet = (Servlet) servletClass.newInstance();
-            primitiveServlet.service((ServletRequest) request,(ServletResponse) response);
+            primitiveServlet.service(request,response);
 
         } catch (InstantiationException e) {
             throw new RuntimeException(e);

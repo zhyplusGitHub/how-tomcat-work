@@ -37,9 +37,11 @@ public class HttpServer1 {
                 request.parse();
                 Response response = new Response(out);
                 response.setRequest(request);
+                RequestFacade requestFacade = new RequestFacade(request);
+                ResponseFacade responseFacade = new ResponseFacade(response);
                 if (request.getUri().startsWith("/servlet/")){
                     ServletProcessor1 servletProcessor = new ServletProcessor1();
-                    servletProcessor.process(request,response);
+                    servletProcessor.process(requestFacade,responseFacade);
                 }else{
                     StaticResourceProcessor processor = new StaticResourceProcessor();
                     processor.process(request,response);
