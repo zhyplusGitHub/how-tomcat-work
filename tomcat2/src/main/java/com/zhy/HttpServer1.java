@@ -9,7 +9,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class HttpServer1 {
-    public final static String WEB_ROOT = System.getProperty("user.dir")+ File.separator+"webroot";
     private final static String SHUTDOWN_COMMAND ="/SHUTDOWN";
     private boolean shutdown = false;
 
@@ -35,10 +34,16 @@ public class HttpServer1 {
                 input = socket.getInputStream();
                 out = socket.getOutputStream();
                 Request request = new Request(input);
-//                request.parse();
-//                Response response = new Response(out);
-//                response.setRequest(request);
-//                response.sendStaticResource();
+                request.parse();
+                Response response = new Response(out);
+                response.setRequest(request);
+                if (request.getUri().startsWith("/servlet/")){
+                    ServletProcessor1 servletProcessor = new ServletProcessor1();
+                    servletProcessor.process(request,response);
+                }else{
+                    StaticResourceProcessor processor = new StaticResourceProcessor();
+                    processor.process(request,response);
+                }
                 socket.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
